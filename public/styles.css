@@ -86,7 +86,7 @@ button:hover {
 .card{
     width: 80%;
     left: 100px;
-    bottom: 60px;
+    bottom: 65px;
 }
 label{
     text-transform: uppercase;
@@ -240,4 +240,10 @@ h6{
     transform: translate(-50%,-50%);
     border-radius: 15px;
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
+}
+.cardIn{
+    position: relative;
+    width: 80%;
+    left: 100px;
+    bottom: 65px;
 }

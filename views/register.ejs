@@ -2,23 +2,25 @@
     <div class="container">
         <div class="section1">
             <h1 class="heading">Welcome to Online Test</h1><br>
-            <h4>Sign up</h4><br>    
+            <h4>Sign up</h4><br>   
+            
             <form action="/register" method="POST">
                 <div class="formGroup">
                     <p><label for="userName">User Name</label></p>
-                    <input type="text" id="userName" autocomplete="off" >
+                    <input type="text" id="userName">
                 </div>
                 <div>
                     <p><label for="email">Email Address</label></p>
-                    <input type="email" id="email" name="email" required autocomplete="off">
+                    <input type="email" id="email"  name="username" required>
                 </div>
                 <div>
                     <p><label for="password">Password</label></p>
-                    <input type="password" id="password" required >
+                    <input type="password" id="password" name="password" required >
                 </div>
-                <button type="button" id="btn">Sign Up Now</button>
+                <button type="submit" id="btn">Sign Up Now</button>
                 <p class="already">Already a member? <a href="/login">Log in</a></p>
             </form>
+            
             <div class="line"></div>  
             <div socialIcons> 
             <h6>Or Connect With - </h6>
