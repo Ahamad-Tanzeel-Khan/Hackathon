@@ -32,7 +32,7 @@ mongoose.set('strictQuery', false);
 mongoose.connect("mongodb://127.0.0.1:27017/userDB", {useNewUrlParser: true});
 
 const userSchema = new mongoose.Schema ({
-  email: String,
+  username: String,
   password: String,
   googleId: String,
 });
@@ -111,55 +111,64 @@ app.get("/test", function(req,res){
 });
 
 app.post("/register", function(req,res){
-  const username = req.body.username;
-  const password = req.body.password;
-
-  const user = new User({
-    username: req.body.username,
+  User.register((
+    {username: req.body.username,
     password: req.body.password
-  });
-  User.register({email: req.body.username}, req.body.password, function(err,user){
-    if(err){
+  }),
+    req.body.password,
+    (err, user) => {
+    if (err) {
       console.log(err);
-      res.redirect("/register");
+      console.log(req.body.username);
+      console.log(req.body.password);
     } else {
-      passport.authenticate("local")(req,res, function(){
-        res.redirect("/test");
+      passport.authenticate('local')(req, res, () =>{
+        res.redirect('/test');
+        user.save();
       });
     }
   });
-
 });
 
 app.post("/login", function(req,res){
-  const username = req.body.username;
-  const password = req.body.password;
+  const loginUsername = req.body.username;
+const loginPassword = req.body.password;
 
-  const user = new User({
-    username: req.body.username,
-    password: req.body.password
-  });
-
-  req.login(user, function(err){
-    if(err){
-      console.log(err);
+User.findOne({username:loginUsername})
+  .then((foundUser) => {
+    if(foundUser){
+      if(foundUser.password === loginPassword){
+        // Use passport.authenticate() to authenticate the user
+        passport.authenticate('local', function(err, user, info) {
+          if (err) {
+            console.log(err);
+            res.redirect('/register');
+          }
+          if (!user) {
+            console.log(info.message);
+            res.redirect('/register');
+          }
+          req.login(user, function(err) {
+            if (err) {
+              console.log(err);
+              res.redirect('/register');
+            }
+            // Redirect the user to the /test page if the login is successful
+            res.redirect('/test');
+          });
+        })(req, res);
+      } else {
+        res.redirect('/register');
+      }
     } else {
-      passport.authenticate("local");
-      res.redirect("/test");
+      res.redirect('/register');
     }
   })
+  .catch((err) => {
+    console.log(err);
+    res.redirect('/register');
+  });
 
-  User.findOne({email:username})
-    .then((foundUser) => {
-        if(foundUser){
-            if(foundUser.password === password){
-                res.redirect("test");
-            }
-            else{
-              res.redirect("/register");
-            }
-        }
-   })
 });
 
 
